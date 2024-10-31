@@ -1,0 +1,316 @@
+about:
+  date: October 31, 2024 16:42:25
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 10
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: email
+    - name: phone
+    - name: address
+    - name: id
+    description: Stores customer information including contact details.
+    info_list: Stores customer information including contact details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: CustomerOrderList
+      resource: CustomerOrder
+    - direction: tomany
+      fks:
+      - customer_id
+      name: DeliveryList
+      resource: Delivery
+    type: Customer
+    user_key: name
+  CustomerOrder:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+    - name: order_date
+      type: DATETIME
+    - name: total_amount
+    description: Records customer orders including products and quantities.
+    info_list: Records customer orders including products and quantities.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_order_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: CustomerOrder
+    user_key: id
+  Delivery:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+    - name: delivery_date
+      type: DATETIME
+    - name: status
+    description: Schedules and tracks deliveries to customers.
+    info_list: Schedules and tracks deliveries to customers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Delivery
+    user_key: id
+  Employee:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: position
+    - name: start_date
+      type: DATETIME
+    - name: id
+    description: Stores employee records and their positions.
+    info_list: Stores employee records and their positions.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - employee_id
+      name: TimeLogList
+      resource: TimeLog
+    type: Employee
+    user_key: name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: location_id
+    - name: product_id
+    - name: quantity
+    description: Tracks inventory levels at each retail location.
+    info_list: Tracks inventory levels at each retail location.
+    tab_groups:
+    - direction: toone
+      fks:
+      - location_id
+      name: location
+      resource: RetailLocation
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Inventory
+    user_key: id
+  OrderDetail:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+    - name: purchase_order_id
+    - name: quantity
+    - name: price_each
+    description: Details individual products within each purchase order.
+    info_list: Details individual products within each purchase order.
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    - direction: toone
+      fks:
+      - purchase_order_id
+      name: purchase_order
+      resource: PurchaseOrder
+    type: OrderDetail
+    user_key: id
+  OrderItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_order_id
+    - name: product_id
+    - name: quantity
+    - name: price_each
+    description: Contains items within a customer order.
+    info_list: Contains items within a customer order.
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_order_id
+      name: customer_order
+      resource: CustomerOrder
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: OrderItem
+    user_key: id
+  Product:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: description
+    - name: price
+    - name: id
+    description: Maintains inventory of available lumber products.
+    info_list: Maintains inventory of available lumber products.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - product_id
+      name: OrderDetailList
+      resource: OrderDetail
+    - direction: tomany
+      fks:
+      - product_id
+      name: OrderItemList
+      resource: OrderItem
+    type: Product
+    user_key: name
+  PurchaseOrder:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: supplier_id
+    - name: order_date
+      type: DATETIME
+    - name: total_amount
+    description: Records purchase orders placed to suppliers.
+    info_list: Records purchase orders placed to suppliers.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - purchase_order_id
+      name: OrderDetailList
+      resource: OrderDetail
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: PurchaseOrder
+    user_key: id
+  RetailLocation:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: address
+    - name: id
+    description: Lists all retail locations for the lumber yard.
+    info_list: Lists all retail locations for the lumber yard.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - location_id
+      name: InventoryList
+      resource: Inventory
+    type: RetailLocation
+    user_key: name
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: contact_info
+    - name: id
+    description: Contains supplier data for the lumber products.
+    info_list: Contains supplier data for the lumber products.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: PurchaseOrderList
+      resource: PurchaseOrder
+    type: Supplier
+    user_key: name
+  TimeLog:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: employee_id
+    - name: log_date
+      type: DATETIME
+    - name: hours_worked
+    description: Logs employee work hours.
+    info_list: Logs employee work hours.
+    tab_groups:
+    - direction: toone
+      fks:
+      - employee_id
+      name: employee
+      resource: Employee
+    type: TimeLog
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

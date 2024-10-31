@@ -1,0 +1,119 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Customer: Stores customer information including contact details.
+CustomerOrder: Records customer orders including products and quantities.
+Delivery: Schedules and tracks deliveries to customers.
+Employee: Stores employee records and their positions.
+Inventory: Tracks inventory levels at each retail location.
+RetailLocation: Lists all retail locations for the lumber yard.
+Product: Maintains inventory of available lumber products.
+OrderDetail: Details individual products within each purchase order.
+PurchaseOrder: Records purchase orders placed to suppliers.
+OrderItem: Contains items within a customer order.
+Supplier: Contains supplier data for the lumber products.
+TimeLog: Logs employee work hours.
+'''
+}
+
+Table Customer {
+    id INTEGER [primary key]
+    name VARCHAR 
+    email VARCHAR 
+    phone VARCHAR 
+    address VARCHAR 
+    }
+
+Table CustomerOrder {
+    id INTEGER [primary key]
+    customer_id INTEGER 
+    order_date DATETIME 
+    total_amount FLOAT 
+    }
+
+Table Delivery {
+    id INTEGER [primary key]
+    customer_id INTEGER 
+    delivery_date DATETIME 
+    status VARCHAR 
+    }
+
+Table Employee {
+    id INTEGER [primary key]
+    name VARCHAR 
+    position VARCHAR 
+    start_date DATETIME 
+    }
+
+Table Inventory {
+    id INTEGER [primary key]
+    product_id INTEGER 
+    location_id INTEGER 
+    quantity INTEGER 
+    }
+
+Table RetailLocation {
+    id INTEGER [primary key]
+    name VARCHAR 
+    address VARCHAR 
+    }
+
+Table Product {
+    id INTEGER [primary key]
+    name VARCHAR 
+    description VARCHAR 
+    price FLOAT 
+    }
+
+Table OrderDetail {
+    id INTEGER [primary key]
+    purchase_order_id INTEGER 
+    product_id INTEGER 
+    quantity INTEGER 
+    price_each FLOAT 
+    }
+
+Table PurchaseOrder {
+    id INTEGER [primary key]
+    supplier_id INTEGER 
+    order_date DATETIME 
+    total_amount FLOAT 
+    }
+
+Table OrderItem {
+    id INTEGER [primary key]
+    customer_order_id INTEGER 
+    product_id INTEGER 
+    quantity INTEGER 
+    price_each FLOAT 
+    }
+
+Table Supplier {
+    id INTEGER [primary key]
+    name VARCHAR 
+    contact_info VARCHAR 
+    }
+
+Table TimeLog {
+    id INTEGER [primary key]
+    employee_id INTEGER 
+    log_date DATETIME 
+    hours_worked FLOAT 
+    }
+
+
+
+// Relationships
+    Ref: CustomerOrder.(customer_id) < Customer.(id)
+    Ref: Delivery.(customer_id) < Customer.(id)
+    Ref: Inventory.(location_id) < RetailLocation.(id)
+    Ref: Inventory.(product_id) < Product.(id)
+    Ref: OrderDetail.(product_id) < Product.(id)
+    Ref: OrderDetail.(purchase_order_id) < PurchaseOrder.(id)
+    Ref: PurchaseOrder.(supplier_id) < Supplier.(id)
+    Ref: OrderItem.(customer_order_id) < CustomerOrder.(id)
+    Ref: OrderItem.(product_id) < Product.(id)
+    Ref: TimeLog.(employee_id) < Employee.(id)
